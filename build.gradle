@@ -79,3 +79,14 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+test {
+	String activeProfile = project.properties.get('spring.profiles.active')
+	println "Actived profile: $activeProfile"
+	systemProperty "spring.profiles.active", activeProfile
+
+	testLogging {
+		events "failed"
+		exceptionFormat "full"
+	}
+}
