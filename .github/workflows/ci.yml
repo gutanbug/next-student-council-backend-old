@@ -10,7 +10,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [ "main" , "dev" ]
+    branches: [ "main" , "dev_deploy" ]
 
 permissions:
   contents: read
