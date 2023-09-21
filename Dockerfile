@@ -1,4 +1,4 @@
-FROM won983212/pinpoint-agent-jdk-11
+FROM gutanbug53/pinpoint-agent-jdk-11
 
 WORKDIR /usr/app/
 
