@@ -33,7 +33,7 @@ jobs:
         fi
     - name: Set CD_SKIP output
       id: set_output
-      run: echo "CD_SKIP::${{ steps.check_repository.outputs.CD_SKIP }}"
+      run: echo "set-output name=CD_SKIP::${{ steps.check_repository.outputs.CD_SKIP }}"
 
   build:
     needs: check_repository
