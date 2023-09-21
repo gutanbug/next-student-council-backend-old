@@ -29,11 +29,10 @@ jobs:
         echo "$REPO_FULL_NAME"
         echo "$MAIN_REPO"
         if [ "$REPO_FULL_NAME" != "$MAIN_REPO" ]; then
-          echo "CD_SKIP=true"
+          echo "::set-output name=CD_SKIP=true"
         else
-          echo "CD_SKIP=false"
+          echo "::set-output name=CD_SKIP=false"
         fi
-#여기까지는 문제가 없어 보임 아래 조건문에서 제대로 값을 못받는듯
 
   skip_step:
     needs: check_repository
