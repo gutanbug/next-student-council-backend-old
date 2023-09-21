@@ -34,6 +34,7 @@ jobs:
           echo "::set-output name=CD_SKIP=false"
         fi
         echo "CD_SKIP=$CD_SKIP"
+        echo "CD_SKIP=${{ steps.set_output.outputs.CD_SKIP }}"
 
   skip_step:
     needs: check_repository
