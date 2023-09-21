@@ -39,7 +39,7 @@ jobs:
           echo "CD is needed."
         else  
           echo "CD is not needed. It will be canceled soon."
-          exit 0
+          exit 78
         fi
 
     - name: Make test properties
