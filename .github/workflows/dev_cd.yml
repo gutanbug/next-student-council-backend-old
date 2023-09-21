@@ -32,38 +32,30 @@ jobs:
 
   skip_cd:
     needs: check_repo
-    if: echo "${{ needs.check_repo.outputs.cd-skip }} == true"
+    if: $GITHUB_REPOSITORY == "YOUR_USER/YOUR_REPO_NAME"
     runs-on: ubuntu-latest
     steps:
-      - name: Get CD_SKIP
-        id: get_cd_skip
-        run: |
-          CD_SKIP=$(cat $GITHUB_OUTPUT)
-          echo "CD_SKIP: $CD_SKIP"
-
       - name: Skip CD
         run: |
+          echo "CD_SKIP=${{ needs.check_repo.outputs.cd-skip }}"
           echo "Cd will be terminated soon..."
           exit 0
 
   build:
     runs-on: ubuntu-latest
+    if: $GITHUB_REPOSITORY != "YOUR_USER/YOUR_REPO_NAME"
     needs: check_repo
-    if: echo "${{ needs.check_repo.outputs.cd-skip }} == false"
     environment: dev
     steps:
+      - name: Get CD_SKIP
+        run: |
+          echo "CD_SKIP=${{ needs.check_repo.outputs.cd-skip }}"
 
       - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
-
-      - name: Get CD_SKIP
-        id: get_cd_skip
-        run: |
-          CD_SKIP=$(cat $GITHUB_OUTPUT)
-          echo "CD_SKIP: $CD_SKIP"
 
       - name: Make test properties
         env:
