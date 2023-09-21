@@ -33,7 +33,9 @@ jobs:
         else
           echo "::set-output name=CD_SKIP=false"
         fi
+        $CD_SKIP=true
         echo "CD_SKIP=$CD_SKIP"
+        ${{ steps.set_output.outputs.CD_SKIP }}=false
         echo "CD_SKIP=${{ steps.set_output.outputs.CD_SKIP }}"
 
   skip_step:
