@@ -33,58 +33,61 @@ jobs:
       run: |
         REPO_INFO=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }})
         FULL_NAME=$(echo "$REPO_INFO" | jq -r .full_name)
-        MAIN_REPO="gutanbug/next-student-council-backend"
+        MAIN_REPO="EveryUniv/next-student-council-backend"
         
         if [ "$FULL_NAME" == "$MAIN_REPO" ]; then
-          echo "CD is needed. It will be continued soon."
-        
-          - name: Make test properties
-            env:
-              PROPERTIES: ${{ secrets.PROPERTIES_TEST }}
-            run: |
-              mkdir -p ./src/test/resources && cd "$_"
-              touch ./application.yml
-              echo $PROPERTIES | base64 --decode > application.yml
-            shell: bash
-      
-          - name: Build with Gradle
-            uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-            with:
-              arguments: build
-      
-          - name: Docker build
-            env:
-              USERNAME: ${{ secrets.DOCKER_USERNAME }}
-              REPO: ${{ secrets.DOCKER_REPO }}
-            run: |
-              docker build -t $USERNAME/$REPO:{$GITHUB_SHA::7} -t $USERNAME/$REPO:latest .
-      
-          - name: Docker push
-            env:
-              USERNAME: ${{ secrets.DOCKER_USERNAME }}
-              PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-              REPO: ${{ secrets.DOCKER_REPO }}
-            run: |
-              docker login -u $USERNAME -p $PASSWORD
-              docker push $USERNAME/$REPO:${GITHUB_SHA::7}
-              docker push $USERNAME/$REPO:latest
-      
-          - name: SSH Remote Commands
-            uses: appleboy/ssh-action@master
-            env:
-              REPO: ${{ secrets.DOCKER_REPO }}
-            with:
-              host: ${{ secrets.SERVER_HOST }}
-              username: ubuntu
-              key: ${{ secrets.NEXT_PRIVATE_PEM_KEY }}
-              envs: GITHUB_SHA,REPO
-              script: |
-                ./deploy.sh ${{ secrets.DOCKER_USERNAME }} $REPO ${GITHUB_SHA::7}
-        
+          echo "CD is needed."
         else  
-          echo "CD is not needed. It will be canceled soon."
+          echo "CD is not needed."
           exit 0
         fi
+    - name: SKip CD
+      run: echo "CD will be canceled soon."
+      if: success()
+
+    - name: Make test properties
+      env:
+        PROPERTIES: ${{ secrets.PROPERTIES_TEST }}
+      run: |
+        mkdir -p ./src/test/resources && cd "$_"
+        touch ./application.yml
+        echo $PROPERTIES | base64 --decode > application.yml
+      shell: bash
+
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      with:
+        arguments: build
+
+    - name: Docker build
+      env:
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        REPO: ${{ secrets.DOCKER_REPO }}
+      run: |
+        docker build -t $USERNAME/$REPO:{$GITHUB_SHA::7} -t $USERNAME/$REPO:latest .
+
+    - name: Docker push
+      env:
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        REPO: ${{ secrets.DOCKER_REPO }}
+      run: |
+        docker login -u $USERNAME -p $PASSWORD
+        docker push $USERNAME/$REPO:${GITHUB_SHA::7}
+        docker push $USERNAME/$REPO:latest
+
+    - name: SSH Remote Commands
+      uses: appleboy/ssh-action@master
+      env:
+        REPO: ${{ secrets.DOCKER_REPO }}
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ubuntu
+        key: ${{ secrets.NEXT_PRIVATE_PEM_KEY }}
+        envs: GITHUB_SHA,REPO
+        script: |
+          ./deploy.sh ${{ secrets.DOCKER_USERNAME }} $REPO ${GITHUB_SHA::7}
+          
       
 
 
