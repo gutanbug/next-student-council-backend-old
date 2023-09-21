@@ -30,7 +30,6 @@ jobs:
 
   skip_cd:
     #needs: check_repo
-    if: ${{ needs.check_repo.outputs.CD_SKIP == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Get CD_SKIP
@@ -47,7 +46,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     #needs: check_repo
-    if: ${{ needs.check_repo.outputs.CD_SKIP == 'false' }}
     environment: dev
     steps:
 
