@@ -24,11 +24,11 @@ jobs:
     - name: Check Repository Name
       id: repository_name
       run: |
-        REPO_FULL_NAME=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/owner | jq -r .login)
+        REPO_FULL_NAME=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }} | jq -r .full_name)
         MAIN_REPO="EveryUniv/next-student-council-backend"
         echo "$REPO_FULL_NAME"
         echo "$MAIN_REPO"
-        if [ "$REPO_FULL_NAME" != "$MAIN_REPO" ]; then
+        if [ "$REPO_FULL_NAME" -ne "$MAIN_REPO" ]; then
           echo "CD_SKIP=true"
         else
           echo "CD_SKIP=false"
@@ -36,7 +36,7 @@ jobs:
 
   skip_step:
     needs: check_repository
-    if: needs.check_repository.outputs.CD_SKIP == 'true'
+    if: ${{ needs.check_repository.outputs.CD_SKIP }} == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: CD SKIP
@@ -45,9 +45,9 @@ jobs:
 
   build:
     needs: check_repository
-    if: needs.check_repository.outputs.CD_SKIP == 'false'
-    environment: dev
     runs-on: ubuntu-latest
+    if: ${{ needs.check_repository.outputs.CD_SKIP }} == 'false'
+    environment: dev
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
