@@ -25,7 +25,7 @@ jobs:
       id: repository_name
       run: |
         REPO_FULL_NAME=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }} | jq -r .full_name)
-        MAIN_REPO="gutanbug/next-student-council-backend"
+        MAIN_REPO="EveryUniv/next-student-council-backend"
         echo "$REPO_FULL_NAME"
         echo "$MAIN_REPO"
         if [ "$REPO_FULL_NAME" != "$MAIN_REPO" ]; then
@@ -33,6 +33,7 @@ jobs:
         else
           echo "CD_SKIP=false"
         fi
+#여기까지는 문제가 없어 보임 아래 조건문에서 제대로 값을 못받는듯
 
   skip_step:
     needs: check_repository
@@ -41,7 +42,7 @@ jobs:
     steps:
       - name: CD SKIP
         run: |
-          echo ${{ needs.check_repository.outputs.CD_SKIP }}
+          echo "${{ needs.check_repository.outputs.CD_SKIP }}"
           echo "CD is not needed. Progress will be terminated soon."
 
   build:
@@ -50,7 +51,7 @@ jobs:
     if: ${{ needs.check_repository.outputs.CD_SKIP }} == false
     environment: dev
     steps:
-      - run: echo ${{ needs.check_repository.outputs.CD_SKIP }}
+      - run: echo "${{ needs.check_repository.outputs.CD_SKIP }}"
 
       - uses: actions/checkout@v3
       - name: Set up JDK 11
