@@ -23,16 +23,22 @@ jobs:
       - name: Check Repo
         run: |
           if [ "$GITHUB_REPOSITORY" != "YOUR_USER/YOUR_REPO_NAME" ]; then
-            echo "::set-output name=CD_SKIP::true"
+            echo "CD_SKIP=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=CD_SKIP::false"
+            echo "CD_SKIP=false" >> $GITHUB_OUTPUT
           fi
 
   skip_cd:
-    needs: check_repo
+    #needs: check_repo
     if: ${{ needs.check_repo.outputs.CD_SKIP == 'true' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Get CD_SKIP
+        id: get_cd_skip
+        run: |
+          CD_SKIP=$(cat $GITHUB_OUTPUT)
+          echo "CD_SKIP: $CD_SKIP"
+
       - name: Skip CD
         run: |
           echo "Cd will be terminated soon..."
@@ -40,7 +46,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: check_repo
+    #needs: check_repo
     if: ${{ needs.check_repo.outputs.CD_SKIP == 'false' }}
     environment: dev
     steps:
@@ -50,6 +56,12 @@ jobs:
         with:
           java-version: '11'
           distribution: 'adopt'
+
+      - name: Get CD_SKIP
+        id: get_cd_skip
+        run: |
+          CD_SKIP=$(cat $GITHUB_OUTPUT)
+          echo "CD_SKIP: $CD_SKIP"
 
       - name: Make test properties
         env:
