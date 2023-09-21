@@ -28,7 +28,7 @@ jobs:
         MAIN_REPO="EveryUniv/next-student-council-backend"
         echo "$REPO_FULL_NAME"
         echo "$MAIN_REPO"
-        if [ "$REPO_FULL_NAME" -ne "$MAIN_REPO" ]; then
+        if [ "$REPO_FULL_NAME" != "$MAIN_REPO" ]; then
           echo "CD_SKIP=true"
         else
           echo "CD_SKIP=false"
