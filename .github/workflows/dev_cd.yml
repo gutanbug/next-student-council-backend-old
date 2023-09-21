@@ -23,9 +23,9 @@ jobs:
       - name: Check Repo
         run: |
           if [ "$GITHUB_REPOSITORY" != "YOUR_USER/YOUR_REPO_NAME" ]; then
-            echo "CD_SKIP=true" >> $GITHUB_OUTPUT
+            echo "CD_SKIP=true" >> $GITHUB_STATE
           else
-            echo "CD_SKIP=false" >> $GITHUB_OUTPUT
+            echo "CD_SKIP=false" >> $GITHUB_STATE
           fi
 
   skip_cd:
@@ -41,7 +41,7 @@ jobs:
       - name: Skip CD
         run: |
           echo "Cd will be terminated soon..."
-          exit0
+          exit 0
 
   build:
     runs-on: ubuntu-latest
