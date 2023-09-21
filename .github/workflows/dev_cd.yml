@@ -28,8 +28,19 @@ jobs:
             echo "::set-output name=cd_skip::false"
           fi
 
-  skip_cd:
+  check_cd_skip:
     needs: check_repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get CD_SKIP
+        shell: bash
+        run: |
+          skip_value="${{ needs.check_repo.outputs.cd_skip }}"
+          echo "CD_SKIP: $skip_value"
+
+  skip_cd:
+    needs: check_cd_skip
     if: ${{ needs.check_repo.outputs.cd_skip }} == true
     runs-on: ubuntu-latest
     steps:
@@ -46,7 +57,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: check_repo
+    needs: check_cd_skip
     if: ${{ needs.check_repo.outputs.cd_skip }} == true
     environment: dev
     steps:
