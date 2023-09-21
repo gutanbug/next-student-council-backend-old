@@ -36,7 +36,7 @@ jobs:
 
   skip_step:
     needs: check_repository
-    if: needs.check_repository.outputs.CD_SKIP == "true"
+    if: needs.check_repository.outputs.CD_SKIP == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: CD SKIP
@@ -45,7 +45,7 @@ jobs:
 
   build:
     needs: check_repository
-    if: needs.check_repository.outputs.CD_SKIP == "false"
+    if: needs.check_repository.outputs.CD_SKIP == 'false'
     environment: dev
     runs-on: ubuntu-latest
     steps:
