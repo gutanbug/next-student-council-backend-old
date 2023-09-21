@@ -32,7 +32,7 @@ jobs:
         
         if [ $REPO_OWNER == "$COMMITTER_NAME" ]; then
           echo "Cd is not needed. It will be canceled soon."
-          exit 0
+          exit 1
         else
           echo "Cd is needed. It will be continued soon."
         fi
