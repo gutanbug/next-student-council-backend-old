@@ -36,22 +36,21 @@ jobs:
 
   skip_step:
     needs: check_repository
-    if: needs.check_repository.outputs.CD_SKIP == true
+    if: ${{ steps.set_output.outputs.CD_SKIP }} == true
     runs-on: ubuntu-latest
     steps:
       - name: CD Stopped
         run: |
-          echo "needs.check_repository.outputs.CD_SKIP"
-          echo "needs.outputs.CD_SKIP"
+          echo "${{ steps.set_output.outputs.CD_SKIP }}"
           echo "CD is not needed. Progress will be terminated soon."
 
   build:
     needs: check_repository
     runs-on: ubuntu-latest
-    if: needs.check_repository.outputs.CD_SKIP == false
+    if: ${{ steps.set_output.outputs.CD_SKIP }} == false
     environment: dev
     steps:
-      - run: echo "needs.check_repository.outputs.CD_SKIP"
+      - run: echo "${{ steps.set_output.outputs.CD_SKIP }}"
 
       - uses: actions/checkout@v3
       - name: Set up JDK 11
