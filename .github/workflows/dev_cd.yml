@@ -28,10 +28,20 @@ jobs:
             echo "::set-output name=CD_SKIP::false"
           fi
 
+  skip_cd:
+    needs: check_repo
+    if: ${{ needs.check_repo.outputs.CD_SKIP == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip CD
+        run: |
+          echo "Cd will be terminated soon..."
+          exit0
+
   build:
     runs-on: ubuntu-latest
     needs: check_repo
-    if: ${{ needs.check_repo.outputs.CD_SKIP != 'true' }}
+    if: ${{ needs.check_repo.outputs.CD_SKIP == 'false' }}
     environment: dev
     steps:
 
@@ -84,15 +94,7 @@ jobs:
           script: |
             ./deploy.sh ${{ secrets.DOCKER_USERNAME }} $REPO ${GITHUB_SHA::7}
 
-  skip_cd:
-    needs: check_repo
-    if: ${{ needs.check_repo.outputs.CD_SKIP == 'false' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip CD
-        run: |
-          echo "Cd will be terminated soon..."
-          exit0
+
     
           
       
