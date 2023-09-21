@@ -32,8 +32,8 @@ jobs:
         
         if [ "$FULL_NAME" != "$MAIN_REPO" ]; then
           echo "CD is not needed. It will be canceled soon."
-          exit 78
-        else
+          (exit 78) > /dev/null 2>&1
+        else  
           echo "CD is needed. It will be continued soon."
         fi
       
