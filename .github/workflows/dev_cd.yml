@@ -32,7 +32,7 @@ jobs:
 
   skip_cd:
     needs: check_repo
-    if: $GITHUB_REPOSITORY == "YOUR_USER/YOUR_REPO_NAME"
+    if: github.repository == "YOUR_USER/YOUR_REPO_NAME"
     runs-on: ubuntu-latest
     steps:
       - name: Skip CD
@@ -43,7 +43,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    if: $GITHUB_REPOSITORY != "YOUR_USER/YOUR_REPO_NAME"
+    if: github.repository != "YOUR_USER/YOUR_REPO_NAME"
     needs: check_repo
     environment: dev
     steps:
