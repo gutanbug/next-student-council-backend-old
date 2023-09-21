@@ -42,6 +42,9 @@ jobs:
     steps:
       - name: CD SKIP
         run: |
+          echo "${{ needs.outputs.CD_SKIP }}"
+          echo "${{ needs.outputs.CD_SKIP }}"
+          echo "${{ jobs.check_repository.outputs.CD_SKIP }}"
           echo "${{ needs.check_repository.outputs.CD_SKIP }}"
           echo "CD is not needed. Progress will be terminated soon."
 
