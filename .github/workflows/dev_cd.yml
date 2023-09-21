@@ -36,7 +36,7 @@ jobs:
 
   skip_step:
     needs: check_repository
-    if: ${{ steps.set_output.outputs.CD_SKIP }} == true
+    if: steps.check_repository.outputs.CD_SKIP == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: CD Stopped
@@ -47,7 +47,7 @@ jobs:
   build:
     needs: check_repository
     runs-on: ubuntu-latest
-    if: ${{ steps.set_output.outputs.CD_SKIP }} == false
+    if: steps.check_repository.outputs.CD_SKIP == 'false'
     environment: dev
     steps:
       - run: echo "${{ steps.set_output.outputs.CD_SKIP }}"
