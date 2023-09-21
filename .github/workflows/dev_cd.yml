@@ -26,13 +26,13 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        REPO_OWNER=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/owner | jp -r .login)
+        REPO_OWNER=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/owner | jq -r .login)
         
         COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
         
         if [ $REPO_OWNER == "$COMMITTER_NAME" ]; then
           echo "Cd is not needed. It will be canceled soon."
-          exit 0
+          exit 1
         else
           echo "Cd is needed. It will be continued soon."
         fi
