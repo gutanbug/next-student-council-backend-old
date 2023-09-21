@@ -33,7 +33,7 @@ jobs:
       run: |
         REPO_INFO=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }})
         FULL_NAME=$(echo "$REPO_INFO" | jq -r .full_name)
-        MAIN_REPO="EveryUniv/next-student-council-backend"
+        MAIN_REPO="gutanbug/next-student-council-backend"
         
         if [ "$FULL_NAME" == "$MAIN_REPO" ]; then
           echo "CD is needed. It will be continued soon."
