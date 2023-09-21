@@ -26,15 +26,15 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        REPO_OWNER=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/owner | jq -r .login)
+        REPO_INFO=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }})
+        FULL_NAME = $(echo "$REPO_INFO" | jq -r .full_name)
+        MAIN_REPO = "EveryUniv/next-student-council-backend"
         
-        COMMITTER_NAME=$(git log -1 --pretty=format:'%an')
-        
-        if [ $REPO_OWNER == "$COMMITTER_NAME" ]; then
-          echo "Cd is not needed. It will be canceled soon."
-          exit 1
+        if [ "$FULL_NAME" != "$MAIN_REPO" ]; then
+          echo "CD is not needed. It will be canceled soon."
+          exit 0
         else
-          echo "Cd is needed. It will be continued soon."
+          echo "CD is needed. It will be continued soon."
         fi
       
 
